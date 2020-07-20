@@ -1084,11 +1084,11 @@ export default class VideoPlayer extends Component {
   renderSeekbar() {
     return (
       <View
-        style={styles.seekbar.container}
+        style={[styles.seekbar.container, this.props.seekbarContainerStyle]}
         collapsable={false}
         {...this.player.seekPanResponder.panHandlers}>
         <View
-          style={styles.seekbar.track}
+          style={[styles.seekbar.track, this.props.seekbarTrackStyle]}
           onLayout={event =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
           }
@@ -1096,6 +1096,7 @@ export default class VideoPlayer extends Component {
           <View
             style={[
               styles.seekbar.fill,
+              this.props.seekbarFillStyle,
               {
                 width: this.state.seekerFillWidth,
                 backgroundColor: this.props.seekColor || '#FFF',
@@ -1110,6 +1111,7 @@ export default class VideoPlayer extends Component {
           <View
             style={[
               styles.seekbar.circle,
+              this.props.seekbarCircleStyle,
               {backgroundColor: this.props.seekColor || '#FFF'},
             ]}
             pointerEvents={'none'}
@@ -1127,8 +1129,12 @@ export default class VideoPlayer extends Component {
       this.state.paused === true
         ? require('./assets/img/play.png')
         : require('./assets/img/pause.png');
+    let component = <Image source={source} />;
+    if (this.props.renderPlayPause) {
+      component = this.props.renderPlayPause({paused: this.state.paused});
+    }
     return this.renderControl(
-      <Image source={source} />,
+      component,
       this.methods.togglePlayPause,
       styles.controls.playPause,
     );
