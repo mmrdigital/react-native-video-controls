@@ -1063,7 +1063,7 @@ export default class VideoPlayer extends Component {
           source={require('./assets/img/bottom-vignette.png')}
           style={[styles.controls.column]}
           imageStyle={[styles.controls.vignette]}>
-            {this.renderTitle()}
+          {this.renderTitle()}
 
           <SafeAreaView
             style={[styles.controls.row, styles.controls.bottomControlGroup]}>
@@ -1169,7 +1169,7 @@ export default class VideoPlayer extends Component {
       <Text style={styles.controls.timerText}>
         {this.calculateTimeDuration()}
       </Text>,
-      () => {}),
+      () => {},
       styles.controls.timer,
     );
   }
