@@ -1064,13 +1064,18 @@ export default class VideoPlayer extends Component {
           style={[styles.controls.column]}
           imageStyle={[styles.controls.vignette]}>
           {this.renderTitle()}
-
+          {seekbarControl}
+          {!this.props.seekbarInline && seekbarControl}
           <SafeAreaView
-            style={[styles.controls.row, styles.controls.bottomControlGroup]}>
+            style={[
+              styles.controls.row,
+              styles.controls.bottomControlGroup,
+              this.props.bottomControlGroupStyle,
+            ]}>
             {playPauseControl}
             {timerControlElapsed}
+            {this.props.seekbarInline && seekbarControl}
             {timerControl}
-            {seekbarControl}
             {timerControlDuration}
           </SafeAreaView>
         </ImageBackground>
@@ -1164,7 +1169,9 @@ export default class VideoPlayer extends Component {
    */
   renderTimer() {
     return this.renderControl(
-      <Text style={styles.controls.timerText}>{this.calculateTime()}</Text>,
+      <Text style={[styles.controls.timerText, this.props.timerTextStyle]}>
+        {this.calculateTime()}
+      </Text>,
       this.methods.toggleTimer,
       styles.controls.timer,
     );
@@ -1172,7 +1179,8 @@ export default class VideoPlayer extends Component {
 
   renderTimerDuration() {
     return this.renderControl(
-      <Text style={styles.controls.timerText}>
+      <Text
+        style={[styles.controls.timerText, this.props.timerTextDurationStyle]}>
         {this.calculateTimeDuration()}
       </Text>,
       () => {},
@@ -1182,7 +1190,8 @@ export default class VideoPlayer extends Component {
 
   renderTimerElapsed() {
     return this.renderControl(
-      <Text style={styles.controls.timerText}>
+      <Text
+        style={[styles.controls.timerText, this.props.timerTextElapsedStyle]}>
         {this.calculateTimeElapsed()}
       </Text>,
       () => {},
