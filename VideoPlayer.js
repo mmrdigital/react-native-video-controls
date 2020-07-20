@@ -541,6 +541,19 @@ export default class VideoPlayer extends Component {
     return this.formatTime(this.state.currentTime);
   }
 
+  calculateTimeDuration() {
+    return this.formatTime(this.state.duration);
+  }
+
+  calculateTimeElapsed() {
+    return this.formatTime(this.state.currentTime);
+  }
+
+  calculateTimeRemaining() {
+    const time = this.state.duration - this.state.currentTime;
+    return `-${this.formatTime(time)}`;
+  }
+
   /**
    * Format a time string as mm:ss
    *
@@ -784,6 +797,9 @@ export default class VideoPlayer extends Component {
        * When panning, update the seekbar position, duh.
        */
       onPanResponderMove: (evt, gestureState) => {
+        if (this.props.onScrubStart) {
+          this.props.onScrubStart();
+        }
         const position = this.state.seekerOffset + gestureState.dx;
         this.setSeekerPosition(position);
         let state = this.state;
@@ -816,6 +832,9 @@ export default class VideoPlayer extends Component {
        * onEnd callback
        */
       onPanResponderRelease: (evt, gestureState) => {
+        if (this.props.onScrubEnd) {
+          this.props.onScrubEnd();
+        }
         const time = this.calculateTimeFromSeekerPosition();
         let state = this.state;
         if (time >= state.duration && !state.loading) {
@@ -1018,6 +1037,12 @@ export default class VideoPlayer extends Component {
     const timerControl = this.props.disableTimer
       ? this.renderNullControl()
       : this.renderTimer();
+    const timerControlDuration = this.props.showDurationTimer
+      ? this.renderTimerDuration()
+      : this.renderNullControl();
+    const timerControlElapsed = this.props.showElapsedTimer
+      ? this.renderTimerElapsed()
+      : this.renderNullControl();
     const seekbarControl = this.props.disableSeekbar
       ? this.renderNullControl()
       : this.renderSeekbar();
@@ -1038,12 +1063,15 @@ export default class VideoPlayer extends Component {
           source={require('./assets/img/bottom-vignette.png')}
           style={[styles.controls.column]}
           imageStyle={[styles.controls.vignette]}>
-          {seekbarControl}
+            {this.renderTitle()}
+
           <SafeAreaView
             style={[styles.controls.row, styles.controls.bottomControlGroup]}>
             {playPauseControl}
-            {this.renderTitle()}
+            {timerControlElapsed}
             {timerControl}
+            {seekbarControl}
+            {timerControlDuration}
           </SafeAreaView>
         </ImageBackground>
       </Animated.View>
@@ -1061,7 +1089,7 @@ export default class VideoPlayer extends Component {
         {...this.player.seekPanResponder.panHandlers}>
         <View
           style={styles.seekbar.track}
-          onLayout={event =>
+          onLayout={(event) =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
           }
           pointerEvents={'none'}>
@@ -1136,6 +1164,26 @@ export default class VideoPlayer extends Component {
     );
   }
 
+  renderTimerDuration() {
+    return this.renderControl(
+      <Text style={styles.controls.timerText}>
+        {this.calculateTimeDuration()}
+      </Text>,
+      () => {}),
+      styles.controls.timer,
+    );
+  }
+
+  renderTimerElapsed() {
+    return this.renderControl(
+      <Text style={styles.controls.timerText}>
+        {this.calculateTimeElapsed()}
+      </Text>,
+      () => {},
+      styles.controls.timer,
+    );
+  }
+
   /**
    * Show loading icon
    */
@@ -1191,7 +1239,7 @@ export default class VideoPlayer extends Component {
         <View style={[styles.player.container, this.styles.containerStyle]}>
           <Video
             {...this.props}
-            ref={videoPlayer => (this.player.ref = videoPlayer)}
+            ref={(videoPlayer) => (this.player.ref = videoPlayer)}
             resizeMode={this.state.resizeMode}
             volume={this.state.volume}
             paused={this.state.paused}
