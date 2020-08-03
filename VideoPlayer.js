@@ -919,18 +919,22 @@ export default class VideoPlayer extends Component {
    * wrapper and styling.
    */
   renderControl(children, callback, style = {}) {
-    return (
-      <TouchableHighlight
-        underlayColor="transparent"
-        activeOpacity={0.3}
-        onPress={() => {
-          this.resetControlTimeout();
-          callback();
-        }}
-        style={[styles.controls.control, style]}>
-        {children}
-      </TouchableHighlight>
-    );
+    if (callback) {
+      return (
+        <TouchableHighlight
+          underlayColor="transparent"
+          activeOpacity={0.3}
+          onPress={() => {
+            this.resetControlTimeout();
+            callback();
+          }}
+          style={[styles.controls.control, style]}>
+          {children}
+        </TouchableHighlight>
+      );
+    } else {
+      return <View style={[styles.controls.control, style]}>{children}</View>;
+    }
   }
 
   /**
@@ -1185,7 +1189,7 @@ export default class VideoPlayer extends Component {
         style={[styles.controls.timerText, this.props.timerTextDurationStyle]}>
         {this.calculateTimeDuration()}
       </Text>,
-      () => {},
+      this.props.onPressTimerDuration,
       styles.controls.timer,
     );
   }
@@ -1196,7 +1200,7 @@ export default class VideoPlayer extends Component {
         style={[styles.controls.timerText, this.props.timerTextElapsedStyle]}>
         {this.calculateTimeElapsed()}
       </Text>,
-      () => {},
+      this.props.onPressTimerElapsed,
       styles.controls.timer,
     );
   }
