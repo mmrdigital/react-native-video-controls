@@ -282,6 +282,9 @@ export default class VideoPlayer extends Component {
    * two toggles fullscreen mode.
    */
   _onScreenTouch() {
+    if (this.props.onScreenTouch) {
+      this.props.onScreenTouch();
+    }
     if (this.player.tapActionTimeout) {
       clearTimeout(this.player.tapActionTimeout);
       this.player.tapActionTimeout = 0;
@@ -1064,7 +1067,6 @@ export default class VideoPlayer extends Component {
           style={[styles.controls.column]}
           imageStyle={[styles.controls.vignette]}>
           {this.renderTitle()}
-          {seekbarControl}
           {!this.props.seekbarInline && seekbarControl}
           <SafeAreaView
             style={[
