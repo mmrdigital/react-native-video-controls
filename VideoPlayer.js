@@ -1117,7 +1117,11 @@ export default class VideoPlayer extends Component {
           />
         </View>
         <View
-          style={[styles.seekbar.handle, {left: this.state.seekerPosition}]}
+          style={[
+            styles.seekbar.handle,
+            this.props.seekbarCircleContainerStyle,
+            {left: this.state.seekerPosition},
+          ]}
           pointerEvents={'none'}>
           <View
             style={[
@@ -1178,7 +1182,7 @@ export default class VideoPlayer extends Component {
         {this.calculateTime()}
       </Text>,
       this.methods.toggleTimer,
-      styles.controls.timer,
+      [styles.controls.timer, this.props.timerTextContainerStyle],
     );
   }
 
@@ -1189,7 +1193,7 @@ export default class VideoPlayer extends Component {
         {this.calculateTimeDuration()}
       </Text>,
       this.props.onPressTimerDuration,
-      styles.controls.timer,
+      [styles.controls.timer, this.props.timerTextDurationContainerStyle],
     );
   }
 
@@ -1200,7 +1204,7 @@ export default class VideoPlayer extends Component {
         {this.calculateTimeElapsed()}
       </Text>,
       this.props.onPressTimerElapsed,
-      styles.controls.timer,
+      [styles.controls.timer, this.props.timerTextElapsedContainerStyle],
     );
   }
 
