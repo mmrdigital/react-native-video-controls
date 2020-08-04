@@ -451,16 +451,18 @@ export default class VideoPlayer extends Component {
    * current state.
    */
   _toggleControls() {
-    let state = this.state;
-    state.showControls = !state.showControls;
+    if (this.props.enableToggleControls) {
+      let state = this.state;
+      state.showControls = !state.showControls;
 
-    if (state.showControls) {
-      this._showControls();
-    } else {
-      this._hideControls();
+      if (state.showControls) {
+        this._showControls();
+      } else {
+        this._hideControls();
+      }
+
+      this.setState(state);
     }
-
-    this.setState(state);
   }
 
   _showControls() {
@@ -751,6 +753,7 @@ export default class VideoPlayer extends Component {
     }
 
     if (this.state.showControls !== nextProps.showControls) {
+      this.setState({showControls: nextProps.showControls});
       nextProps.showControls ? this._showControls() : this._hideControls();
     }
   }
