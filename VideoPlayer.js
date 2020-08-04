@@ -1081,7 +1081,7 @@ export default class VideoPlayer extends Component {
             {playPauseControl}
             {timerControlElapsed}
             {this.props.seekbarInline && seekbarControl}
-            {timerControl}
+            {!this.props.disableTimer && timerControl}
             {timerControlDuration}
           </SafeAreaView>
         </ImageBackground>
