@@ -325,9 +325,11 @@ export default class VideoPlayer extends Component {
    * Default is 15s
    */
   setControlTimeout() {
-    this.player.controlTimeout = setTimeout(() => {
-      this._hideControls();
-    }, this.player.controlTimeoutDelay);
+    if (this.props.enableControlTimeout) {
+      this.player.controlTimeout = setTimeout(() => {
+        this._hideControls();
+      }, this.player.controlTimeoutDelay);
+    }
   }
 
   /**
@@ -436,6 +438,9 @@ export default class VideoPlayer extends Component {
       let state = this.state;
       state.showControls = false;
       this.hideControlAnimation();
+      this.clearControlTimeout();
+      typeof this.events.onHideControls === 'function' &&
+        this.events.onHideControls();
 
       this.setState(state);
     }
@@ -450,18 +455,19 @@ export default class VideoPlayer extends Component {
     state.showControls = !state.showControls;
 
     if (state.showControls) {
-      this.showControlAnimation();
-      this.setControlTimeout();
-      typeof this.events.onShowControls === 'function' &&
-        this.events.onShowControls();
+      this._showControls();
     } else {
-      this.hideControlAnimation();
-      this.clearControlTimeout();
-      typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this._hideControls();
     }
 
     this.setState(state);
+  }
+
+  _showControls() {
+    this.showControlAnimation();
+    this.setControlTimeout();
+    typeof this.events.onShowControls === 'function' &&
+      this.events.onShowControls();
   }
 
   /**
@@ -742,6 +748,10 @@ export default class VideoPlayer extends Component {
 
     if (this.styles.containerStyle !== nextProps.style) {
       this.styles.containerStyle = nextProps.style;
+    }
+
+    if (this.state.showControls !== nextProps.showControls) {
+      nextProps.showControls ? this._showControls() : this._hideControls();
     }
   }
 
