@@ -1182,7 +1182,7 @@ export default class VideoPlayer extends Component {
         {this.calculateTime()}
       </Text>,
       this.methods.toggleTimer,
-      [styles.controls.timer, this.props.timerTextContainerStyle],
+      this.props.timerTextContainerStyle,
     );
   }
 
@@ -1193,7 +1193,7 @@ export default class VideoPlayer extends Component {
         {this.calculateTimeDuration()}
       </Text>,
       this.props.onPressTimerDuration,
-      [styles.controls.timer, this.props.timerTextDurationContainerStyle],
+      this.props.timerTextDurationContainerStyle,
     );
   }
 
@@ -1204,7 +1204,7 @@ export default class VideoPlayer extends Component {
         {this.calculateTimeElapsed()}
       </Text>,
       this.props.onPressTimerElapsed,
-      [styles.controls.timer, this.props.timerTextElapsedContainerStyle],
+      this.props.timerTextElapsedContainerStyle,
     );
   }
 
