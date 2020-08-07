@@ -284,8 +284,7 @@ export default class VideoPlayer extends Component {
   _onScreenTouch() {
     if (this.props.onScreenTouch) {
       this.props.onScreenTouch();
-    }
-    if (this.player.tapActionTimeout) {
+    } else if (this.player.tapActionTimeout) {
       clearTimeout(this.player.tapActionTimeout);
       this.player.tapActionTimeout = 0;
       this.methods.toggleFullscreen();
