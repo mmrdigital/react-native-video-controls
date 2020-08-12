@@ -217,11 +217,17 @@ export default class VideoPlayer extends Component {
     let state = this.state;
     if (!state.scrubbing) {
       state.currentTime = data.currentTime;
+      state.playableDuration = data.playableDuration;
 
       if (!state.seeking) {
         const position = this.calculateSeekerPosition();
         this.setSeekerPosition(position);
       }
+
+      const playableDuration = this.calculatePlayableDuration();
+      state.seekerPlayableWidth = this.constrainToSeekerMinMax(
+        playableDuration,
+      );
 
       if (typeof this.props.onProgress === 'function') {
         this.props.onProgress(...arguments);
@@ -626,6 +632,11 @@ export default class VideoPlayer extends Component {
    */
   calculateSeekerPosition() {
     const percent = this.state.currentTime / this.state.duration;
+    return this.player.seekerWidth * percent;
+  }
+
+  calculatePlayableDuration() {
+    const percent = this.state.playableDuration / this.state.duration;
     return this.player.seekerWidth * percent;
   }
 
@@ -1127,6 +1138,17 @@ export default class VideoPlayer extends Component {
             ]}
             pointerEvents={'none'}
           />
+          <View
+            style={[
+              styles.seekbar.playable,
+              this.props.playablebarFillStyle,
+              {
+                width: this.state.seekerPlayableWidth,
+                backgroundColor: this.props.playableColor || '#FFF',
+              },
+            ]}
+            pointerEvents={'none'}
+          />
         </View>
         <View
           style={[
@@ -1484,6 +1506,14 @@ const styles = {
       position: 'relative',
       top: 14,
       width: '100%',
+      zIndex: 2,
+    },
+    playable: {
+      backgroundColor: '#555',
+      height: 1,
+      width: '100%',
+      position: 'absolute',
+      zIndex: 1,
     },
     fill: {
       backgroundColor: '#FFF',
