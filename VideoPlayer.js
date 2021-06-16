@@ -748,12 +748,6 @@ export default class VideoPlayer extends Component {
    * we have to handle possible props changes to state changes
    */
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.paused !== nextProps.paused) {
-      this.setState({
-        paused: nextProps.paused,
-      });
-    }
-
     if (this.styles.videoStyle !== nextProps.videoStyle) {
       this.styles.videoStyle = nextProps.videoStyle;
     }
